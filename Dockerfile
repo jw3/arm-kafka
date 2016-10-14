@@ -1,8 +1,15 @@
-FROM anapsix/alpine-java
+FROM jwiii/arm-java:8
 
-MAINTAINER Wurstmeister 
+MAINTAINER jw3
 
-RUN apk add --update unzip wget curl docker jq coreutils
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+ 	unzip wget curl jq coreutils nano ca-certificates iptables init-system-helpers libapparmor1 net-tools \
+ && curl -o /tmp/docker.deb https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_1.12.2-0~jessie_armhf.deb \
+ && dpkg -i /tmp/docker.deb \
+ && apt-get clean \
+ && rm -rf /tmp/* \
+ && rm -rf /var/lib/apt/lists/*
 
 ENV KAFKA_VERSION="0.10.0.1" SCALA_VERSION="2.11"
 ADD download-kafka.sh /tmp/download-kafka.sh
